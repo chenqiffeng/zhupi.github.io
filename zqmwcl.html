@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>特别的话</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义样式 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#ff4d4f',
+            secondary: '#722ed1',
+            accent: '#36cbcb',
+            warm: '#ff7d00',
+            soft: '#f7ba1e'
+          },
+          fontFamily: {
+            cute: ['"Ma Shan Zheng"', '"PingFang SC"', 'cursive', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+      .fall-down {
+        animation: fall 5s linear forwards;
+      }
+      .rotate-effect {
+        transform-origin: center;
+        animation: rotate 8s linear infinite;
+      }
+      .bounce-in {
+        animation: bounceIn 0.5s ease-out;
+      }
+    }
+    
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(calc(100vh + 50px)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    @keyframes bounceIn {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      60% {
+        transform: scale(1.1);
+      }
+      80% {
+        transform: scale(0.9);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-pink-50 min-h-screen overflow-hidden relative">
+  <!-- 背景装饰元素 -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-100 rounded-full filter blur-3xl"></div>
+    <div class="absolute bottom-1/3 right-1/3 w-96 h-96 bg-purple-100 rounded-full filter blur-3xl"></div>
+  </div>
+  
+  <!-- 中心标题 -->
+  <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+    <h1 class="text-[clamp(2rem,5vw,3rem)] font-cute text-primary mb-6 text-shadow bounce-in">特别的话</h1>
+    <p class="text-gray-600 mb-8 text-center max-w-md">下面有话想对你说 ~</p>
+    
+    <!-- 动态文字容器 -->
+    <div id="messageContainer" class="w-full h-[70vh] relative"></div>
+    
+    <!-- 底部装饰 -->
+    <div class="absolute bottom-4 left-0 right-0 text-center text-gray-500 text-sm">
+      <i class="fa fa-heart text-red-500 animate-pulse"></i>
+    </div>
+  </div>
+
+  <script>
+    // 文字样式配置
+    const textStyles = {
+      colors: ['primary', 'secondary', 'accent', 'warm', 'soft', 'purple-500', 'pink-600', 'red-500'],
+      sizes: [24, 32, 40, 48, 56, 64], // 字体大小
+      rotations: [-30, -15, 0, 15, 30], // 初始旋转角度
+      delays: [0, 100, 200, 300, 400, 500] // 动画延迟
+    };
+    
+    // 消息容器
+    const container = document.getElementById('messageContainer');
+    
+    // 生成随机消息
+    function generateRandomMessage() {
+      const color = textStyles.colors[Math.floor(Math.random() * textStyles.colors.length)];
+      const size = textStyles.sizes[Math.floor(Math.random() * textStyles.sizes.length)];
+      const rotation = textStyles.rotations[Math.floor(Math.random() * textStyles.rotations.length)];
+      const delay = textStyles.delays[Math.floor(Math.random() * textStyles.delays.length)];
+      
+      // 创建消息元素
+      const message = document.createElement('div');
+      message.className = `absolute text-[${size}px] font-cute font-bold fall-down rotate-effect bounce-in`;
+      message.style.color = `theme('colors.${color}')`;
+      message.style.left = `${Math.random() * 100}%`;
+      message.style.animationDelay = `${delay}ms`;
+      message.style.transform = `rotate(${rotation}deg)`;
+      message.innerText = "我错了";
+      
+      // 添加到容器
+      container.appendChild(message);
+      
+      // 动画结束后移除元素
+      setTimeout(() => {
+        message.remove();
+      }, 5000);
+    }
+    
+    // 定期生成消息
+    function startGeneratingMessages() {
+      setInterval(generateRandomMessage, 300);
+    }
+    
+    // 页面加载完成后开始生成消息
+    document.addEventListener('DOMContentLoaded', startGeneratingMessages);
+    
+    // 适配微信浏览器，防止页面缩放
+    document.addEventListener('touchstart', function() {}, { passive: true });
+  </script>
+</body>
+</html>
